@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skylytics Next - Know Your Sky, Explore More</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-cloud-sun animated-logo"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Skylytics Next</h1>
+                        <span>Know Your Sky, Explore More</span>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <div class="current-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="userLocation">Detecting your location...</span>
+                    </div>
+                    <div class="header-buttons">
+                        <button id="aboutBtn" class="header-btn">
+                            <i class="fas fa-info-circle"></i>
+                            <span>About</span>
+                        </button>
+                        <button id="themeToggle" class="header-btn">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="search-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="cityInput" placeholder="Search any city or capital...">
+                    <button id="searchBtn" class="search-button">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Analyze</span>
+                    </button>
+                </div>
+                <div id="suggestions" class="suggestions hidden"></div>
+            </div>
+        </div>
+
+        <div id="errorMessage" class="error-message hidden">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Location not found. Please try a different search.</span>
+        </div>
+
+        <main class="weather-content">
+            <div class="current-weather">
+                <div class="weather-header">
+                    <div class="location-info">
+                        <h2 id="cityName">Search for a location</h2>
+                        <div class="location-details">
+                            <i class="fas fa-globe-americas"></i>
+                            <span id="fullLocation">--</span>
+                            <span id="continent" class="continent-badge">--</span>
+                        </div>
+                        
+                        <div class="time-weather-container">
+                            <div class="time-comparison">
+                                <div class="time-info">
+                                    <div class="time-section">
+                                        <h4>Your Local Time</h4>
+                                        <div class="current-time">
+                                            <i class="fas fa-clock"></i>
+                                            <span id="userTime">--:--:--</span>
+                                            <span id="userDate">Sunday, September 28, 2025</span>
+                                        </div>
+                                    </div>
+                                    <div class="time-section">
+                                        <h4>Location Time</h4>
+                                        <div class="current-time">
+                                            <i class="fas fa-clock"></i>
+                                            <span id="locationDate">Sunday, September 28, 2025</span>
+                                            <span id="timeZone">UTC+0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="timeDifference" class="time-difference hidden">
+                                    <div class="difference-content">
+                                        <i class="fas fa-exchange-alt"></i>
+                                        <div class="difference-text">
+                                            <span>Time difference:</span>
+                                            <span class="difference-value">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="weather-display-section">
+                                <div class="weather-condition-card">
+                                    <div class="condition-content">
+                                        <div class="condition-icon">
+                                            <i id="weatherIcon" class="fas fa-sun animated-icon"></i>
+                                        </div>
+                                        <span id="weatherCondition">--</span>
+                                    </div>
+                                </div>
+                                <div class="temperature-card">
+                                    <div class="temperature-content">
+                                        <div class="temperature-display">
+                                            <span id="currentTemp">--</span>
+                                            <span class="unit">°C</span>
+                                        </div>
+                                        <div class="feels-like">
+                                            Feels like <span id="feelsLike">--°C</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="weather-main">
+                    <div class="weather-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon humidity">
+                                <i class="fas fa-tint animated-icon"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="humidity">--%</span>
+                                <span class="stat-label">Humidity</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon wind">
+                                <i class="fas fa-wind animated-icon"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="windSpeed">-- m/s</span>
+                                <span class="stat-label">Wind Speed</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon pressure">
+                                <i class="fas fa-compress-alt animated-icon"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="pressure">-- hPa</span>
+                                <span class="stat-label">Pressure</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon visibility">
+                                <i class="fas fa-eye animated-icon"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="visibility">-- km</span>
+                                <span class="stat-label">Visibility</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="additional-info">
+                        <div class="info-row">
+                            <div class="info-card">
+                                <i class="fas fa-sun animated-icon"></i>
+                                <div>
+                                    <span>Sunrise</span>
+                                    <span id="sunrise">--:--</span>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <i class="fas fa-moon animated-icon"></i>
+                                <div>
+                                    <span>Sunset</span>
+                                    <span id="sunset">--:--</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-card">
+                                <i class="fas fa-cloud-rain animated-icon"></i>
+                                <div>
+                                    <span>Precipitation</span>
+                                    <span id="precipitation">--%</span>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <i class="fas fa-sun animated-icon"></i>
+                                <div>
+                                    <span>UV Index</span>
+                                    <span id="uvIndex">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="forecast-section">
+                <div class="section-header">
+                    <h3>7-Day Forecast Analytics</h3>
+                    <div class="forecast-controls">
+                        <button class="control-btn active" data-type="temperature">
+                            <i class="fas fa-thermometer-half"></i>
+                            Temperature
+                        </button>
+                        <button class="control-btn" data-type="precipitation">
+                            <i class="fas fa-cloud-rain"></i>
+                            Precipitation
+                        </button>
+                        <button class="control-btn" data-type="humidity">
+                            <i class="fas fa-tint"></i>
+                            Humidity
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="forecastChart"></canvas>
+                </div>
+                <div class="forecast-cards">
+                    <!-- Forecast cards will be dynamically generated -->
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Skylytics Next - Know Your Sky, Explore More &copy; 2025 — <a href="https://www.mdraselhossain.xyz" target="_blank" class="author-link"><strong>Md. Rasel Hossain</strong></a>. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+   <!-- About Modal -->
+<div id="aboutModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>About Skylytics Next</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="about-section">
+                <h3><i class="fas fa-chart-line"></i> How It Works</h3>
+                <p>Skylytics Next is an advanced weather analytics platform that provides comprehensive weather information for any location worldwide. Our system combines real-time data with predictive analytics to deliver accurate weather forecasts and insights.</p>
+                
+                <h3><i class="fas fa-database"></i> Data Sources</h3>
+                <p>We utilize multiple data sources including satellite imagery, weather stations, and atmospheric models to provide the most accurate weather information. Our system processes data from over 10,000 locations globally.</p>
+                
+                <h3><i class="fas fa-feather-alt"></i> Features</h3>
+                <ul>
+                    <li>Real-time weather conditions for any city or capital</li>
+                    <li>7-day detailed forecast with interactive charts</li>
+                    <li>Time zone comparison and difference calculation</li>
+                    <li>Comprehensive weather metrics (humidity, pressure, wind, etc.)</li>
+                    <li>Dark/Light mode for comfortable viewing</li>
+                    <li>Responsive design for all devices</li>
+                </ul>
+                
+                <h3><i class="fas fa-cogs"></i> Technology</h3>
+                <p>Skylytics Next is powered by cutting-edge meteorological algorithms and real-time data processing systems. Our platform leverages advanced forecasting models to deliver precise weather predictions with exceptional accuracy and reliability.</p>
+                
+                <h3><i class="fas fa-globe"></i> Global Coverage</h3>
+                <p>Access weather information for any of the 195 countries worldwide and their capitals. Our database includes comprehensive geographical and meteorological data.</p>
+                
+                <h3><i class="fas fa-bullseye"></i> Accuracy & Reliability</h3>
+                <p>Our weather predictions are continuously validated against ground truth data to ensure the highest level of accuracy. We employ multiple verification methods to maintain reliability across all forecast periods.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
